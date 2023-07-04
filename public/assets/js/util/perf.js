@@ -36,7 +36,7 @@
         console.log(`FCP: ${payload.fcp}`);
       }
     });
-  }).observe({ type: "paint", buffered: true });
+  }).observe({ type: "paint", buffered: true });//buffered here gives you the events even if they've already happened
 
   // Largest Contentful Paint
   new PerformanceObserver((entryList) => {
@@ -53,6 +53,9 @@
   new PerformanceObserver((entryList) => {
     let entries = entryList.getEntries() || [];
     entries.forEach((entry) => {
+      // this is to test if the shift was expected or triggered by a button click
+      // like a menu opening or layout going to "full screen" that would cause the layout to shift
+      // we don't want to capture things like this so this is a check for it
       if (!entry.hadRecentInput) {
         payload.cls += entry.value;
         console.log(`CLS: ${payload.cls}`);
@@ -69,7 +72,8 @@
     });
   }).observe({ type: "first-input", buffered: true });
 
-
+  // it's hard to tell when the page is actually done "fetching" all of the metric data that needs capturing so
+  // this listens for the browser visibility to change, and when it does, it will send all of the data collected thus far to the server
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === 'hidden') {
       let data = JSON.stringify(payload);

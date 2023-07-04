@@ -6,6 +6,8 @@
  * @example
  *   <element src="" data-src="/url/" data-srcset="..." />
  */
+
+//wait until the document is ready to do anything
 (function (ready) {
   if (document.readyState === "complete" || document.readyState === "interactive") {
     ready();
@@ -14,6 +16,7 @@
   }
 })(function lazyLoader() { /* the document is now ready. */
 
+  //look for any elements on the page that have this data-src property
   var lazyEls = [].slice.call(document.querySelectorAll("[data-src]"));
 
   function load(el) {
